@@ -1,3 +1,5 @@
 #!/bin/sh
-brew install ripgrep
+
+curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+brew install nvim ripgrep
 
