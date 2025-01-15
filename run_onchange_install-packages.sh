@@ -7,5 +7,5 @@ echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/node/.bas
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # Install dev dependencies
-brew install nvim ripgrep
+brew install nvim ripgrep fish
 

@@ -638,6 +638,28 @@ require('lazy').setup({
         },
       }
 
+      require('lspconfig').stylelint_lsp.setup {
+        filetypes = { 'css', 'scss' },
+        root_dir = require('lspconfig').util.root_pattern('package.json', '.git'),
+        settings = {
+          stylelintplus = {
+            -- see available options in stylelint-lsp documentation
+          },
+        },
+        on_attach = function(client)
+          client.server_capabilities.document_formatting = false
+        end,
+      }
+
+      require('lspconfig').cssmodules_ls.setup {
+        -- provide your on_attach to bind keymappings
+        on_attach = custom_on_attach,
+        -- optionally
+        init_options = {
+          camelCase = 'dashes',
+        },
+      }
+
       -- Ensure the servers and tools above are installed
       --  To check the current status of installed tools and/or manually install
       --  other tools, you can run
@@ -711,6 +733,7 @@ require('lazy').setup({
         typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
         javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        css = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
