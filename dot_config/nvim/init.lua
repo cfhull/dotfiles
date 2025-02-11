@@ -850,6 +850,9 @@ require('lazy').setup({
           { name = 'luasnip' },
           { name = 'path' },
         },
+        per_filetype = {
+          codecompanion = { 'codecompanion' },
+        },
       }
     end,
   },
@@ -859,13 +862,14 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+    'catppuccin/nvim',
+    name = 'catppuccin',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'catppuccin-mocha'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
@@ -1054,13 +1058,50 @@ require('lazy').setup({
     config = true,
   },
   {
-    'Exafunction/codeium.nvim',
+    'MagicDuck/grug-far.nvim',
+    config = function()
+      require('grug-far').setup {
+        -- options, see Configuration section below
+        -- there are no required options atm
+        -- engine = 'ripgrep' is default, but 'astgrep' can be specified
+      }
+    end,
+  },
+  {
+    'olimorris/codecompanion.nvim',
     dependencies = {
       'nvim-lua/plenary.nvim',
-      'hrsh7th/nvim-cmp',
+      'nvim-treesitter/nvim-treesitter',
     },
     config = function()
-      require('codeium').setup {}
+      require('codecompanion').setup {
+        strategies = {
+          -- Change the default chat adapter
+          chat = {
+            adapter = 'qwen',
+            inline = 'qwen',
+          },
+        },
+        adapters = {
+          qwen = function()
+            return require('codecompanion.adapters').extend('ollama', {
+              name = 'qwen', -- Give this adapter a different name to differentiate it from the default ollama adapter
+              schema = {
+                model = {
+                  default = 'qwen2.5-coder:7b',
+                },
+              },
+            })
+          end,
+        },
+      }
+
+      vim.keymap.set({ 'n', 'v' }, '<C-a>', '<cmd>CodeCompanionActions<cr>', { noremap = true, silent = true })
+      vim.keymap.set({ 'n', 'v' }, '<LocalLeader>a', '<cmd>CodeCompanionChat Toggle<cr>', { noremap = true, silent = true })
+      vim.keymap.set('v', 'ga', '<cmd>CodeCompanionChat Add<cr>', { noremap = true, silent = true })
+
+      -- Expand 'cc' into 'CodeCompanion' in the command line
+      vim.cmd [[cab cc CodeCompanion]]
     end,
   },
 
